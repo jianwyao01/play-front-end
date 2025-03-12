@@ -102,6 +102,11 @@ function existsTodo(newTodoLabel) {
     return todos.some(t => t.label === newTodoLabel);
 }
 
+function readAloud(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    speechSynthesis.speak(utterance);
+}
+
 function addTodo() {
     const newTodoValue = addTodoInput.value;
     if (existsTodo(newTodoValue)) {
@@ -116,6 +121,8 @@ function addTodo() {
     todos.push(newTodo);
     const newTodoElement = renderTodoInReadMode(newTodo);
     todosList.append(newTodoElement);
+
+    readAloud(newTodo.label);
 
     addTodoInput.value = '';
     addTodoButton.disabled = true;
