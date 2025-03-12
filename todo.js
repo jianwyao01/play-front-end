@@ -98,8 +98,17 @@ function removeTodoInEditMode(todo) {
     return li;
 }
 
+function existsTodo(newTodoLabel) {
+    return todos.some(t => t.label === newTodoLabel);
+}
+
 function addTodo() {
-    var newTodoValue = addTodoInput.value;
+    const newTodoValue = addTodoInput.value;
+    if (existsTodo(newTodoValue)) {
+        alert('Todo already exists');
+        return;
+    }
+
     const newTodo = {
         label: newTodoValue,
         done: false
