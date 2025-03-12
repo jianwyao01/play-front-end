@@ -1,6 +1,21 @@
 console.log('Happy developing ✨')
 
-const todos = ['Walk the dog', 'Water the plants', 'Sand the charis']
+let index = 0;
+
+const todos = [
+    {
+        "label": "Walk the dog",
+        "done": false
+    },
+    {
+        "label": "Water the plants",
+        "done": false
+    },
+    {
+        "label": "Sand the chairs",
+        "done": false
+    }
+]
 
 const addTodoInput = document.getElementById('todo-input')
 const addTodoButton = document.getElementById('add-todo-btn')
@@ -27,16 +42,24 @@ addTodoButton.addEventListener('click', () => {
 function renderTodoInReadMode(todo) {
     const li = document.createElement('li')
     const span = document.createElement('span');
-    span.textContent = todo;
+    span.textContent = todo.label;
+    span.style.textDecoration = todo.done ? 'line-through' : '';
+
+    if (todo.done) {
+        li.append(span);
+        return li;
+    }
+
     span.addEventListener('dblclick', () => {
         const idx = todos.indexOf(todo);
         todosList.replaceChild(removeTodoInEditMode(todo), todosList.childNodes[idx]);
     });
     li.append(span);
+
     const button = document.createElement('button');
     button.textContent = 'Done';
     button.addEventListener('click', () => {
-        const idx = todos.indexOf(todo);
+        const idx = findTodoIndex(todo);
         removeTodo(idx);
     });
     li.append(button);
@@ -44,17 +67,21 @@ function renderTodoInReadMode(todo) {
     return li;
 }
 
+function findTodoIndex(todo) {
+    return todos.findIndex(t => t.label === todo.label);
+}
+
 function removeTodoInEditMode(todo) {
     const li = document.createElement('li');
     const input = document.createElement('input');
     input.type = 'text';
-    input.value = todo;
+    input.value = todo.label;
     li.append(input);
 
     const saveButton = document.createElement('button');
     saveButton.textContent = 'Save';
     saveButton.addEventListener('click', () => {
-        const idx = todos.indexOf(todo);
+        const idx = findTodoIndex(todo);
         updateTodo(idx, input.value);
     });
     li.append(saveButton);
@@ -63,7 +90,7 @@ function removeTodoInEditMode(todo) {
     const cancelButton = document.createElement('button');
     cancelButton.textContent = 'Cancel';
     cancelButton.addEventListener('click', () => {
-        const idx = todos.indexOf(todo);
+        const idx = findTodoIndex(todo);
         todosList.replaceChild(renderTodoInReadMode(todo), todosList.childNodes[idx]);
     });
     li.append(cancelButton);
@@ -73,22 +100,35 @@ function removeTodoInEditMode(todo) {
 
 function addTodo() {
     var newTodoValue = addTodoInput.value;
-    todos.push(newTodoValue);
-    const newTodo = renderTodoInReadMode(newTodoValue)
-    todosList.append(newTodo);
+    const newTodo = {
+        label: newTodoValue,
+        done: false
+    }
+    todos.push(newTodo);
+    const newTodoElement = renderTodoInReadMode(newTodo);
+    todosList.append(newTodoElement);
 
     addTodoInput.value = '';
     addTodoButton.disabled = true;
 }
 
 function removeTodo(idx) {
-    todos.splice(idx, 1);
-    todosList.removeChild(todosList.childNodes[idx]);
+    const oldTodo = todos[idx]
+    const newTodo = {
+        ...oldTodo,
+        done: true
+    }
+    todos[idx] = newTodo;
+    todosList.replaceChild(renderTodoInReadMode(newTodo), todosList.childNodes[idx]);
 }
 
 function updateTodo(idx, value) {
-    todos[idx] = value;
-    const newTodo = renderTodoInReadMode(value);
-    todosList.replaceChild(newTodo, todosList.childNodes[idx]);
+    const oldTodo = todos[idx];
+    const newTodo = {
+        ...oldTodo,
+        label: value
+    }
+    todos[idx] = newTodo;
+    todosList.replaceChild(renderTodoInReadMode(newTodo), todosList.childNodes[idx]);
 }
 
