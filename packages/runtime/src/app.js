@@ -2,7 +2,7 @@ import {destroyDOM} from "./destroy-dom";
 import {Dispatcher} from "./dispatcher";
 import {mountDOM} from "./mount-dom";
 
-export function createApp({state, view, reducers}) {
+export function createApp({state, view, reducers = {}}) {
     let parentEl = null;
     let vdom = null;
 
@@ -13,7 +13,7 @@ export function createApp({state, view, reducers}) {
         dispatcher.dispatch(eventName, payload);
     }
 
-    for (const eventName of reducers) {
+    for (const eventName in reducers) {
         const reducer = reducers[eventName];
 
         const subs = dispatcher.subscribe(eventName, (payload) => {

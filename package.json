@@ -1,11 +1,12 @@
 {
-  "name": "play-front-end",
+  "name": "timi-frontend-project",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "npx http-server . -o ./index.html"
-  },
-  "private": true
+  "description": "A project to build a simple front-end framework",
+  "workspaces": [
+    "packages/runtime"
+  ],
+  "private": true,
+  "keywords": ["frontend", "framework"],
+  "author": "jianwyao",
+  "license": "ISC"
 }

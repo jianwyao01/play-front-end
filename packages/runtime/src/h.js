@@ -24,14 +24,6 @@ function mapTextNodes(children) {
     return children.map(child => typeof child === 'string' ? hString(child) : child)
 }
 
-
-/**
-    h('form', { class: 'login-form', action: 'login'}, [
-        h('input', { type: 'text', name: 'username', placeholder: 'Username' }),
-        h('input', { type: 'password', name: 'password', placeholder: 'Password' }),
-        h('button', { on: {click: login } }, ['Login']),
-    ])
-*/
 export function h(tag, props = {}, children = []) {
     return {
         tag,

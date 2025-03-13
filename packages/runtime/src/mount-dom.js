@@ -1,7 +1,6 @@
-import {DOM_TYPES, h} from "./h";
+import {DOM_TYPES} from "./h";
 import {setAttributes} from "./attributes"
 import {addEventListeners} from "./events";
-
 
 function createTextNode(vdom, parentEl) {
     const {value} = vdom;
