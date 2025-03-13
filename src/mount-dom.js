@@ -57,18 +57,3 @@ export function mountDOM(vdom, parentEl) {
         }
     }
 }
-
-const vdom = h('section', {}, [
-    h('h1', {}, ['Hello, World']),
-    h('p', {}, ['This is a paragraph']),
-    h('ul', {}, [
-        h('li', {}, ['Item 1']),
-        h('li', {}, ['Item 2']),
-        h('li', {}, ['Item 3']),
-    ])
-])
-
-const mountEle = document.getElementById('app');
-mountDOM(vdom, mountEle)
-
-console.log(mountEle)
