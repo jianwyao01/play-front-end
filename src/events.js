@@ -10,3 +10,9 @@ export function addEventListeners(el, events={}) {
     }
     return addedListeners;
 }
+
+export function removeEventListeners(listeners = {}, el) {
+    for (const [event, listener] of Object.entries(listeners)) {
+        el.removeEventListener(event, listener);
+    }
+}

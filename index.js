@@ -103,6 +103,12 @@ function addEventListeners(el, events={}) {
     return addedListeners;
 }
 
+export function removeEventListeners(listeners = {}, el) {
+    for (const [event, listener] of Object.entries(listeners)) {
+        el.removeEventListener(event, listener);
+    }
+}
+
 // mount-dom.js
 function createTextNode(vdom, parentEl) {
     const { value } = vdom;
@@ -148,16 +154,82 @@ function mountDOM(vdom, parentEl) {
     }
 }
 
-const vdom = h('section', {}, [
-    h('h1', {}, ['Hello, World']),
-    h('p', {}, ['This is a paragraph']),
-    h('ul', {}, [
-        h('li', {}, ['Item 1']),
-        h('li', {}, ['Item 2']),
-        h('li', {}, ['Item 3']),
-    ])
-]);
+function removeTextNode(vdom) {
+    const {el} = vdom;
+    el.remove();
+}
+
+function removeElementNode(vdom) {
+    const {el, children, listeners} = vdom;
+
+    el.remove();
+    children.forEach(destroyDOM);
+
+    if (listeners) {
+        removeEventListeners(listeners, el);
+        delete vdom.listeners;
+    }
+}
+
+function removeFragmentNodes(vdom) {
+    const {children} = vdom;
+    children.forEach(destroyDOM);
+}
+
+export function destroyDOM(vdom) {
+    const {type} = vdom;
+
+    switch (type) {
+        case DOM_TYPES.TEXT: {
+            removeTextNode(vdom);
+            break;
+        }
+        case DOM_TYPES.ELEMENT: {
+            removeElementNode(vdom);
+            break;
+        }
+        case DOM_TYPES.FRAGMENT: {
+            removeFragmentNodes(vdom);
+            break;
+        }
+        default: {
+            throw new Error(`Can't destroy DOM of type: ${type}`);
+        }
+    }
+
+    delete vdom.el;
+
+}
+
+
+// const vdom = h('section', {}, [
+//     h('h1', {}, ['Hello, World']),
+//     h('p', {}, ['This is a paragraph']),
+//     h('ul', {}, [
+//         h('li', {}, ['Item 1']),
+//         h('li', {}, ['Item 2']),
+//         h('li', {}, ['Item 3']),
+//     ]),
+// ]);
+
+const vdom = hFragment([
+    h('h2', {}, ['Very important news']),
+    h('p', {}, ['such news, many importance, too fresh, wow']),
+    h(
+        'a',
+        {
+            href: 'https://en.wikipedia.org/wiki/Doge_(meme)',
+        },
+        ['Doge!'],
+    ),
+])
 
 const mountEle = document.getElementById('app');
 mountDOM(vdom, mountEle);
-console.log(mountEle);
+console.log("rendered", mountEle);
+console.log("mounted", vdom);
+
+
+destroyDOM(vdom);
+console.log("destroyed", mountEle);
+console.log("unmounted", vdom);
