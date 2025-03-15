@@ -139,7 +139,7 @@ function patchChildren(oldVdom, newVdom) {
     const diffSeq = arrayDiffSequence(oldChilren, newChildren, areNodesEqual);
 
     for (const operation of diffSeq) {
-        const {originalIndex, from, index, item} = operation;
+        const {originalIndex, index, item} = operation;
 
         switch (operation.op) {
             case ARRAY_DIFF_OP.ADD: {

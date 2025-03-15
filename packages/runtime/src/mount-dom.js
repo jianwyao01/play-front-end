@@ -27,7 +27,7 @@ function createElementNode(vdom, parentEl, index) {
     insert(element, parentEl, index);
 }
 
-function createFragmentNodes(vdom, parentEl) {
+function createFragmentNodes(vdom, parentEl, index) {
     const {children} = vdom;
     vdom.el =  parentEl;
 
