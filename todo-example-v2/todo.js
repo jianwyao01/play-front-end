@@ -1,5 +1,4 @@
-import {createApp, h, hFragment} from "https://unpkg.com/timi-frontend@1.0.3"
-
+import {createApp, h, hFragment} from "https://cdn.jsdelivr.net/npm/timi-frontend@2.0.0";
 
 const state = {
     currentTodo: '',
