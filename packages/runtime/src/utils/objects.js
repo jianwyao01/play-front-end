@@ -8,3 +8,7 @@ export function objectsDiff(oldObj, newObj) {
         updated: newKeys.filter(key => oldKeys.includes(key) && oldObj[key] !== newObj[key]),
     }
 }
+
+export function hasOwnProperty(obj, prop) {
+    return Object.prototype.hasOwnProperty.call(obj, prop);
+}
