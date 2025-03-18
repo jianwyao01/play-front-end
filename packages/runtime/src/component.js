@@ -1,6 +1,7 @@
 import {destroyDOM} from "./destroy-dom";
 import {mountDOM} from "./mount-dom";
 import {patchDOM} from "./patch-dom";
+import {DOM_TYPES, extractChildren} from "./h";
 
 export function defineComponent({render, state}) {
     class Component {
@@ -19,6 +20,30 @@ export function defineComponent({render, state}) {
                 ...state,
             }
             this.#patch()
+        }
+
+        get elements() {
+            if (this.#vdom == null) {
+                return []
+            }
+
+            if (this.#vdom.type === DOM_TYPES.FRAGMENT) {
+                return extractChildren(this.#vdom).map(child => child.el)
+            }
+
+            return [this.#vdom.el]
+        }
+
+        get firstElement() {
+            return this.elements[0]
+        }
+
+        get offset() {
+            if (this.#vdom.type === DOM_TYPES.FRAGMENT) {
+                return Array.from(this.#hostEl.childNodes).indexOf(this.firstElement)
+            }
+
+            return 0;
         }
 
         render() {
@@ -43,7 +68,7 @@ export function defineComponent({render, state}) {
             }
 
             const newVdom = this.render();
-            this.#vdom = patchDOM(this.#vdom, newVdom, this.#hostEl);
+            this.#vdom = patchDOM(this.#vdom, newVdom, this.#hostEl, this);
         }
 
         umount() {
