@@ -12,7 +12,7 @@ function createTextNode(vdom, parentEl, index) {
 }
 
 function addProps(element, vdom, hostComponent) {
-    const {props, attrs, events} = extractPropsAndEvents(vdom);
+    const {props: attrs, events} = extractPropsAndEvents(vdom);
     vdom.listeners = addEventListeners(element, events, hostComponent);
     setAttributes(element, attrs);
 }
