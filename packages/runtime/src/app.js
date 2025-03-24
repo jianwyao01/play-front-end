@@ -1,43 +1,38 @@
-import {destroyDOM} from "./destroy-dom";
-import {Dispatcher} from "./dispatcher";
 import {mountDOM} from "./mount-dom";
-import {patchDOM} from "./patch-dom";
+import {destroyDOM} from "./destroy-dom";
+import {h} from "./h"
 
-export function createApp({state, view, reducers = {}}) {
+export function createApp(RootComponent, props={}) {
     let parentEl = null;
-    let vdom = null;
+    let isMounted = false
+    let vdom = null
 
-    const dispatcher = new Dispatcher();
-    const subscriptions = [dispatcher.afterEveryCommand(renderApp)];
-
-    function emit(eventName, payload) {
-        dispatcher.dispatch(eventName, payload);
-    }
-
-    for (const eventName in reducers) {
-        const reducer = reducers[eventName];
-
-        const subs = dispatcher.subscribe(eventName, (payload) => {
-            state = reducer(state, payload);
-        });
-        subscriptions.push(subs);
-    }
-
-    function renderApp() {
-        const newVdom = view(state, emit);
-        vdom = patchDOM(vdom, newVdom, parentEl);
+    function reset() {
+        parentEl = null;
+        isMounted = false;
+        vdom = null;
     }
 
     return {
         mount(_parentEl) {
+            if (isMounted) {
+                throw new Error('The application is already mounted')
+            }
+
             parentEl = _parentEl;
-            vdom = view(state, emit);
-            mountDOM(vdom, parentEl);
+            vdom = h(RootComponent, props);
+            mountDOM(vdom, parentEl)
+
+            isMounted = true
         },
-        unmount() {
-            destroyDOM(vdom);
-            vdom = null;
-            subscriptions.forEach((unsubscribe) => unsubscribe());
+
+        unmounted() {
+            if (!isMounted) {
+                throw new Error('The application is not mounted')
+            }
+
+            destroyDOM(vdom)
+            reset()
         }
     }
 }

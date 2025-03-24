@@ -11,17 +11,17 @@ function createTextNode(vdom, parentEl, index) {
     insert(textNoe, parentEl, index);
 }
 
-function addProps(element, props, vdom, hostComponent) {
-    const {on: events, ...attrs} = props;
+function addProps(element, vdom, hostComponent) {
+    const {props, attrs, events} = extractPropsAndEvents(vdom);
     vdom.listeners = addEventListeners(element, events, hostComponent);
     setAttributes(element, attrs);
 }
 
 function createElementNode(vdom, parentEl, index, hostComponent) {
-    const {tag, props, children} = vdom;
+    const {tag, children} = vdom;
 
     const element = document.createElement(tag);
-    addProps(element, props, vdom, hostComponent)
+    addProps(element, vdom, hostComponent)
     vdom.el = element
 
     children.forEach(child => mountDOM(child, element, null, hostComponent));

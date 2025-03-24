@@ -4,6 +4,8 @@ export function extractPropsAndEvents(vdom) {
         ...props
     } = vdom.props
 
+    delete props.key;
+
     return {
         events,
         props
