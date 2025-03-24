@@ -136,7 +136,7 @@ export function defineComponent({render, state, ...methods}) {
     }
 
     for (const methodName in methods) {
-        if (hasOwnProperty(methods, methodName)) {
+        if (hasOwnProperty(Component, methodName)) {
             throw new Error(`Method ${methodName} is already existed in a component`);
         }
         Component.prototype[methodName] = methods[methodName];

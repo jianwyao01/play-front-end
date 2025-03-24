@@ -13,7 +13,7 @@ function patchComponent(oldVdom, newVdom) {
     const {component} = oldVdom;
     const {props} = extractPropsAndEvents(newVdom);
 
-    component.update(props);
+    component.updateProps(props);
 
     newVdom.component = component;
     newVdom.el = component.firstElement;
