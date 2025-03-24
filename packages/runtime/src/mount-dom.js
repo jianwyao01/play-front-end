@@ -1,6 +1,7 @@
 import {DOM_TYPES} from "./h";
 import {setAttributes} from "./attributes"
 import {addEventListeners} from "./events";
+import {extractPropsAndEvents} from "./utils/props";
 
 function createTextNode(vdom, parentEl, index) {
     const {value} = vdom;
@@ -52,6 +53,15 @@ function insert(el, parentEl, index) {
     }
 }
 
+function createComponentNode(vdom, parentEl, index, hostComponent) {
+    const Component = vdom.tag;
+    const {props, events} = extractPropsAndEvents(vdom.props);
+    const component = new Component(props, events, hostComponent);
+    component.mount(parentEl, index);
+    vdom.component = component;
+    vdom.el = component.firstElement
+}
+
 export function mountDOM(vdom, parentEl, index, hostComponent = null) {
     switch (vdom.type) {
         case DOM_TYPES.TEXT: {
@@ -66,6 +76,11 @@ export function mountDOM(vdom, parentEl, index, hostComponent = null) {
 
         case DOM_TYPES.FRAGMENT: {
             createFragmentNodes(vdom, parentEl, index, hostComponent);
+            break;
+        }
+
+        case DOM_TYPES.COMPONENT: {
+            createComponentNode(vdom, parentEl, index, hostComponent);
             break;
         }
 

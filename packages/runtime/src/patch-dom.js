@@ -7,6 +7,17 @@ import {objectsDiff} from "./utils/objects";
 import {ARRAY_DIFF_OP, arrayDiffSequence, arraysDiff} from "./utils/arrays";
 import {isNotBlankOrEmptyString} from "./utils/strings";
 import {addEventListener} from "./events";
+import {extractPropsAndEvents} from "./utils/props";
+
+function patchComponent(oldVdom, newVdom) {
+    const {component} = oldVdom;
+    const {props} = extractPropsAndEvents(newVdom);
+
+    component.update(props);
+
+    newVdom.component = component;
+    newVdom.el = component.firstElement;
+}
 
 export function patchDOM(oldVdom, newVdom, parentEl, hostComponent = null) {
     if (!areNodesEqual(oldVdom, newVdom)) {
@@ -27,6 +38,11 @@ export function patchDOM(oldVdom, newVdom, parentEl, hostComponent = null) {
 
         case DOM_TYPES.ELEMENT: {
             patchElement(oldVdom, newVdom, hostComponent);
+            break;
+        }
+
+        case DOM_TYPES.COMPONENT: {
+            patchComponent(oldVdom, newVdom);
             break;
         }
     }

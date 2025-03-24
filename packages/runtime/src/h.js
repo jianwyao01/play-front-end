@@ -4,6 +4,7 @@ export const DOM_TYPES = {
     TEXT: 'TEXT',
     ELEMENT: 'ELEMENT',
     FRAGMENT: 'FRAGMENT',
+    COMPONENT: 'COMPONENT',
 }
 
 export function hString(str) {
@@ -25,11 +26,14 @@ function mapTextNodes(children) {
 }
 
 export function h(tag, props = {}, children = []) {
+    const type = typeof tag === 'string' ? DOM_TYPES.ELEMENT : DOM_TYPES.COMPONENT;
+
+
     return {
         tag,
         props,
         children: mapTextNodes(withoutNulls(children)),
-        type: DOM_TYPES.ELEMENT,
+        type,
     }
 }
 
