@@ -6,6 +6,15 @@ export function enqueueJob(job) {
     scheduleUpdate();
 }
 
+export function nextTick() {
+    scheduleUpdate()
+    return flushPromises()
+}
+
+function flushPromises() {
+    return new Promise(resolve => setTimeout(resolve))
+}
+
 function scheduleUpdate() {
     if (isScheduled) {
         return;
@@ -25,7 +34,6 @@ function processJobs() {
             }, (err) => {
                 console.error(`[scheduler] Uncaught error in job: ${err.message}`);
             })
-        job();
     }
 
     isScheduled = false;
