@@ -55,7 +55,7 @@ function insert(el, parentEl, index) {
 
 function createComponentNode(vdom, parentEl, index, hostComponent) {
     const Component = vdom.tag;
-    const {props, events} = extractPropsAndEvents(vdom.props);
+    const {props, events} = extractPropsAndEvents(vdom);
     const component = new Component(props, events, hostComponent);
     component.mount(parentEl, index);
     vdom.component = component;

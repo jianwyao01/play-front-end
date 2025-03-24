@@ -1,6 +1,6 @@
 {
   "name": "timi-frontend",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "main": "dist/timi-frontend.js",
   "files": [
     "dist/timi-frontend.js"
